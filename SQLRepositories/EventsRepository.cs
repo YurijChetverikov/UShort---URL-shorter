@@ -1,7 +1,10 @@
 ﻿using Dapper;
 using Npgsql;
+using System.Data.Common;
+using System.Text.RegularExpressions;
 using UShort.Repositories;
 using UShort.SQLModels;
+using UShort.SQLWriters;
 
 namespace UShort.SQLRepositories
 {
@@ -9,6 +12,33 @@ namespace UShort.SQLRepositories
     public class EventsRepository : IEventsRepository
     {
         private string _connectionString = "";
+        private EventModelCopyWriter _eventCopyWriter = new EventModelCopyWriter();
+
+        /// <summary>
+        /// Creates events using COPY instead of INSERS
+        /// </summary>
+        /// <param name="batch"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task BulkCreateEventsAsync(IEnumerable<EventModel> batch, CancellationToken cancellationToken)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+
+            // While QuerySingleAsync opens connection itself, here we must open connection 
+            await connection.OpenAsync(cancellationToken);
+
+            const string sql = """
+                COPY events (link_id, timestamp, continent_geoname_id, latitude, longitude, accuracy_radius, country_geoname_id, city_geoname_id, event_type, user_agent)
+                FROM STDIN(FORMAT BINARY);
+                """;
+
+            await using var writer = await connection.BeginBinaryImportAsync(sql, cancellationToken);
+
+            foreach (var ev in batch)
+                await _eventCopyWriter.WriteAsync(ev, writer, cancellationToken);
+
+            await writer.CompleteAsync(cancellationToken);
+        }
 
         /// <summary>
         /// Create event
@@ -38,6 +68,8 @@ namespace UShort.SQLRepositories
                 return false;
 
             _connectionString = connectionString;
+
+            _eventCopyWriter = new EventModelCopyWriter();
 
             return true;
         }

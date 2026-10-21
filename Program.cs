@@ -50,15 +50,17 @@ namespace UShort
                 options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
             });
 
-            builder.Services.AddSingleton<Channel<(TelemetryPayload payload, int linkId, char eventType)>>(sp =>
+            #region SINGLETONES
+            builder.Services.AddSingleton<Channel<TelemetryPayload>>(sp =>
             {
-                var options = new UnboundedChannelOptions()
+                var options = new BoundedChannelOptions(10000)
                 {
                     AllowSynchronousContinuations = false,
                     SingleWriter = true,
-                    SingleReader = true
+                    SingleReader = true,
+                    FullMode = BoundedChannelFullMode.Wait
                 };
-                return Channel.CreateUnbounded<(TelemetryPayload payload, int linkId, char eventType)>(options);
+                return Channel.CreateBounded<TelemetryPayload>(options);
             });
 
             _geoipFilename = builder.Configuration.GetValue<string>("GeoIP2FileName");
@@ -113,6 +115,8 @@ namespace UShort
                 return l;
             });
 
+            #endregion
+
             builder.Services.AddHostedService<TelemetryConsumerService>();
 
             var app = builder.Build();
@@ -125,24 +129,32 @@ namespace UShort
 
             _maxLinkLength = _configuration.GetValue<int>("MaximumLinkLength");
 
+            #region MAPPING
+
             // Redirecting to original link
-            app.MapGet("/r/{id}", (async Task<IResult> (string id, HttpContext context, Channel<(TelemetryPayload payload, int linkId, char eventType)> channel, UrlRepository urlRepository, CancellationToken cancellationToken) =>
+            app.MapGet("/r/{id}", (async Task<IResult> (string id, HttpContext context, Channel<TelemetryPayload> channel, UrlRepository urlRepository, CancellationToken cancellationToken) =>
             {
                 int idInt = Base58.Decode(id);
                 URLModel? link = await urlRepository.GetUrlAsync(idInt);
 
                 if (link == null)
                 {
-                    await channel.Writer.WriteAsync((new TelemetryPayload(context), -1, 'R'));
+                    await channel.Writer.WriteAsync(new TelemetryPayload(-1, 'R', context));
                     return Results.LocalRedirect("/linkNotFound.html");
                 }
 
-                await channel.Writer.WriteAsync((new TelemetryPayload(context), idInt, 'R'));
+                await channel.Writer.WriteAsync(new TelemetryPayload(idInt, 'R', context));
                 return Results.Redirect(link.Link);
             }));
 
+            // Redirecting to index.html
+            app.MapGet("/", async Task<IResult> () =>
+            {
+                return Results.LocalRedirect("/index.html");
+            });
+
             // Creating short link
-            app.MapPost("/api/createLink", async (HttpContext context, Channel<(TelemetryPayload payload, int linkId, char eventType)> channel, LinksHashesRepository linksHashesRepository, UrlRepository urlRepository, CancellationToken cancellationToken) =>
+            app.MapPost("/api/createLink", async (HttpContext context, Channel<TelemetryPayload> channel, LinksHashesRepository linksHashesRepository, UrlRepository urlRepository, CancellationToken cancellationToken) =>
             {
                 var linkQuery = context.Request.Query.FirstOrDefault(x => x.Key == "link");
 
@@ -171,7 +183,7 @@ namespace UShort
                 {
                     int id = await urlRepository.CreateUrlAsync(link);
                     await linksHashesRepository.AddLinkAsync(link, id);
-                    await channel.Writer.WriteAsync((new TelemetryPayload(context), id, 'C'));
+                    await channel.Writer.WriteAsync(new TelemetryPayload(id, 'C', context));
 
                     return Results.Text(id.ToString(), statusCode: 200);
                 }
@@ -188,6 +200,8 @@ namespace UShort
 
                 return Results.InternalServerError();
             });
+
+            #endregion
 
             app.Run();
         }

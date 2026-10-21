@@ -90,6 +90,36 @@ body {
   transform: scale(1.06);
 }
 
+
+/* ============================================================
+   GITHUB BUTON (top-left corner)
+   ============================================================ */
+.github-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  line-height: 1;
+  box-shadow: 0 2px 10px var(--color-shadow);
+  transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.3s ease;
+}
+
+.github-button:hover {
+  border-color: var(--color-primary);
+  transform: scale(1.06);
+}
+
 /* ============================================================
    TEXT FIELD + ERROR BANNER
    ============================================================ */

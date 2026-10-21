@@ -18,6 +18,8 @@ const App = {
     const savedTheme = localStorage.getItem('theme');
     const theme = ref(savedTheme === 'dark' ? 'dark' : 'light');
 
+    const githubLink = `https://github.com/YurijChetverikov/UShort---URL-shorter`;
+
     function applyTheme(t) {
       document.documentElement.setAttribute('data-theme', t);
     }
@@ -30,6 +32,10 @@ const App = {
 
     function toggleTheme() {
       theme.value = theme.value === 'light' ? 'dark' : 'light';
+    }
+
+    function redirectToGithub() {
+      window.location.href = githubLink;
     }
 
     // ---- Input handling -----------------------------------------------
@@ -131,6 +137,7 @@ const App = {
       onInputChange,
       onSubmit,
       toggleTheme,
+      redirectToGithub,
     };
   },
 
@@ -144,9 +151,19 @@ const App = {
         :aria-label="theme === 'light' ? 'Включить тёмную тему' : 'Включить светлую тему'"
         @click="toggleTheme"
       >
-        <span v-if="theme === 'light'">🌙</span>
-        <span v-else>☀️</span>
+        <span v-if="theme === 'light'"><i class="bi bi-moon-fill"></i></span>
+        <span v-else><i class="bi bi-sun-fill"></i></span>
       </button>
+
+      <button
+        class="github-button"
+        type="button"
+        @click="redirectToGithub"
+      >
+        <span><i class="bi bi-github"></i></span>
+      </button>
+
+      
 
       <main class="app-main">
         <h1 class="app-title">Сократить ссылку</h1>
