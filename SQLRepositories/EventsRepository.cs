@@ -10,6 +10,11 @@ namespace UShort.SQLRepositories
     {
         private string _connectionString = "";
 
+        /// <summary>
+        /// Create event
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <returns></returns>
         public async Task<int> CreateEventAsync(EventModel ev)
         {
             using var connection = new NpgsqlConnection(_connectionString);

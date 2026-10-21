@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace UShort.SQLModels
+﻿namespace UShort.SQLModels
 {
     public class EventModel
     {

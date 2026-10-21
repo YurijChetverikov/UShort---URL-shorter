@@ -1,0 +1,72 @@
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
+:root,
+[data-theme="light"] {
+  --color-bg:                #f4f7fb;
+  --color-surface:           #ffffff;
+  --color-surface-alt:       #eaf0f8;
+
+  --color-text:              #1e2a3b;
+  --color-text-muted:        #6b7a90;
+  --color-text-inverse:      #ffffff;
+
+  --color-primary:           #4a6fa5;
+  --color-primary-hover:     #3d5d8a;
+  --color-primary-active:    #324d73;
+  --color-primary-soft:      rgba(74, 111, 165, 0.15);
+  --color-primary-text:      #ffffff;
+
+  --color-border:            #d6dfec;
+  --color-input-bg:          #ffffff;
+  --color-input-focus:       #4a6fa5;
+
+  --color-link:              #2c5aa0;
+  --color-link-hover:        #1e4178;
+
+  --color-error-bg:          #fdecec;
+  --color-error-text:        #b3261e;
+  --color-error-border:      #f5c2c0;
+
+  --color-btn-disabled:      #a5b6cc;
+
+  --color-shadow:            rgba(30, 42, 59, 0.08);
+  --color-qr-bg:             #ffffff;
+  --color-qr-fg:             #4a6fa5;
+}
+
+/* ============================================================
+   DARK THEME
+   ============================================================ */
+[data-theme="dark"] {
+  --color-bg:                #0f1722;
+  --color-surface:           #1a2433;
+  --color-surface-alt:       #223045;
+
+  --color-text:              #e2e8f2;
+  --color-text-muted:        #94a3b8;
+  --color-text-inverse:      #ffffff;
+
+  --color-primary:           #5b8cc9;
+  --color-primary-hover:     #6f9dd3;
+  --color-primary-active:    #4a7ab5;
+  --color-primary-soft:      rgba(91, 140, 201, 0.22);
+  --color-primary-text:      #ffffff;
+
+  --color-border:            #2b3a4f;
+  --color-input-bg:          #14202f;
+  --color-input-focus:       #5b8cc9;
+
+  --color-link:              #7ba9e0;
+  --color-link-hover:        #9bc1eb;
+
+  --color-error-bg:          #3a1d1d;
+  --color-error-text:        #f4a7a4;
+  --color-error-border:      #5c2a2a;
+
+  --color-btn-disabled:      #4a5f7a;
+
+  --color-shadow:            rgba(0, 0, 0, 0.45);
+  --color-qr-bg:             #ffffff;
+  --color-qr-fg:             #5b8cc9;
+}

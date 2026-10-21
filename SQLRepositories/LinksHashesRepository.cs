@@ -21,6 +21,12 @@ namespace UShort.SQLRepositories
 
         private string _connectionString = "";
 
+        /// <summary>
+        /// Add link & it's linkId to hash table
+        /// </summary>
+        /// <param name="link"></param>
+        /// <param name="linkId"></param>
+        /// <returns></returns>
         public async Task AddLinkAsync(string link, int linkId)
         {
             using var connection = new NpgsqlConnection(_connectionString);
@@ -32,6 +38,11 @@ namespace UShort.SQLRepositories
             await connection.QueryAsync(sql, new LinksHashesDTO() { LinkId = linkId, Hash = SHA512.HashData(Encoding.UTF8.GetBytes(link)) });
         }
 
+        /// <summary>
+        /// Check if link is in the hash table
+        /// </summary>
+        /// <param name="link"></param>
+        /// <returns></returns>
         public async Task<int> CheckLinkAsync(string link)
         {
             using var connection = new NpgsqlConnection(_connectionString);
