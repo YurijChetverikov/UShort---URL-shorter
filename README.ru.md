@@ -29,6 +29,7 @@
 
 ### Backend
 * Framework: .NET 10 / ASP.NET Core
+* PostgreSQL 18
 * ORM и доступ к данным: [Dapper](https://github.com/DapperLib/Dapper) / [Dapper.AOT](https://github.com/DapperLib/Dapper) (высокопроизводительный micro-ORM с поддержкой Native AOT)
 * Драйвер БД: [Npgsql](https://github.com/npgsql/npgsql) (провайдер PostgreSQL с поддержкой низкоуровневого бинарного копирования)
 * Геолокация по IP: [MaxMind.Db](https://github.com/maxmind/MaxMind-DB-Reader-dotnet) (GeoLite2-City.mmdb)

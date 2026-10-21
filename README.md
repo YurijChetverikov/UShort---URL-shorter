@@ -29,6 +29,7 @@ A lightweight, high-performance URL shortener built with ASP.NET Core 10 and Vue
 
 ### Backend
 * Framework: .NET 10 / ASP.NET Core
+* PostgreSQL 18
 * ORM & Data Access: [Dapper](https://github.com/DapperLib/Dapper) / [Dapper.AOT](https://github.com/DapperLib/Dapper) (High-performance micro-ORM with Native AOT compatibility)
 * Database Driver: [Npgsql](https://github.com/npgsql/npgsql) (PostgreSQL provider with low-level binary copy support)
 * Geo IP Resolution: [MaxMind.Db](https://github.com/maxmind/MaxMind-DB-Reader-dotnet) (GeoLite2-City.mmdb)
